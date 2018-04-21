@@ -27,3 +27,5 @@ squid_acl_safe_ports:
 squid_basic_auth_enabled: false
 squid_basic_auth_username: ''
 squid_basic_auth_password: ''
+
+squid_additional_config: ''
