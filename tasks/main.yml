@@ -1,0 +1,39 @@
+---
+- name: ensure squid config dir
+  file:
+    dest: '{{ squid_config_dir }}'
+    state: directory
+
+- name: remove old squid auth file
+  file:
+    dest: '{{ squid_config_dir }}/htpasswd'
+    state: absent
+
+- name: create squid basic auth file
+  htpasswd:
+    path: '{{ squid_config_dir }}/htpasswd'
+    name: '{{ squid_basic_auth_username }}'
+    password: '{{ squid_basic_auth_password }}'
+  when: squid_basic_auth_enabled
+
+- name: create squid config file
+  template:
+    src: squid.conf.j2
+    dest: '{{ squid_config_dir }}/squid.conf'
+  notify:
+    - reload squid
+
+- name: run squid container
+  docker_container:
+    state: started
+    restart: yes
+    recreate: yes
+    name: '{{ squid_container_name }}'
+    image: '{{ squid_image }}:{{ squid_version }}'
+    restart_policy: always
+    published_ports: '{{ squid_published_ports | default([]) }}'
+    links: '{{ squid_links }}'
+    networks: '{{ squid_networks }}'
+    volumes:
+      - '{{ squid_config_dir }}/squid.conf:/etc/squid/squid.conf'
+      - '{{ squid_config_dir }}/htpasswd:/etc/squid/htpasswd'

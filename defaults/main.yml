@@ -1,0 +1,29 @@
+---
+squid_container_name: squid
+squid_image: kr3ssh/squid
+squid_version: latest
+squid_config_dir: /opt/docker/services/squid
+squid_links: []
+squid_networks: []
+squid_published_ports:
+  - 3128:3128
+
+squid_acl_localnet_networks:
+  - 172.17.0.0/16
+
+squid_acl_safe_ports:
+  - 80           # http
+  - 21           # ftp
+  - 443          # https
+  - 70           # gopher
+  - 210          # wais
+  - '1025-65535' # unregistered ports
+  - 280          # http-mgmt
+  - 488          # gss-http
+  - 591          # filemaker
+  - 777          # multiling http
+  - 901          # SWAT
+
+squid_basic_auth_enabled: false
+squid_basic_auth_username: ''
+squid_basic_auth_password: ''

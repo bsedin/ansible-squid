@@ -1,0 +1,5 @@
+- name: reload squid
+  shell: docker kill --signal=HUP {{ squid_container_name }}
+
+- name: restart squid
+  shell: docker restart {{ squid_container_name }}
